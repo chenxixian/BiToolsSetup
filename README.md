@@ -120,7 +120,7 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ## JupyterLab配置
 
-- 使用 [jupyterlab.yaml ](http://fs.chenxixian.cn:8888/files/doc/Jupyterlab%2BSuperset%2BZeppelin/jupyterlab.yaml)建立jupyterlab虚拟环境
+- 使用 [jupyterlab.yaml ](https://github.com/chenxixian/BiToolsSetup/raw/master/jupyterlab.yaml)建立jupyterlab虚拟环境
 
 ``conda env create -f jupyterlab.yaml``
 
@@ -136,7 +136,7 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ## SuperSet的配置
 
-- 使用 [superset.yaml](http://fs.chenxixian.cn:8888/files/doc/Jupyterlab%2BSuperset%2BZeppelin/superset.yaml)建立superset虚拟环境
+- 使用 [superset.yaml](https://github.com/chenxixian/BiToolsSetup/raw/master/superset.yaml)建立superset虚拟环境
 
 ``conda env create -f superset.yaml``
 
