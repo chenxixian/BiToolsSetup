@@ -1,6 +1,6 @@
 # 开源BI工具安装配置文档
 
-本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置)在CENTOS 7的安装配置
+本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置) 在CENTOS 7的安装配置
 
 ## OS环境配置
 
@@ -133,6 +133,20 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ``LANG=zn jupyter lab --port 8888 --no-browser --allow-root --ip='192.168.2.220'``
 
+- 访问http://ip:8888 ,以Python为Kernel，新建一个Notebook，粘贴代码执行：
+
+```
+from impala.dbapi import connect
+conn = connect(host='cnwulcdhnode01', port=21050,database='dm_finance',auth_mechanism='GSSAPI',kerberos_service_name='impala')
+cursor = conn.cursor()
+cursor.execute('select company_number,sum(price) from dm_finance.dw_col_taxcheck group by company_number ;')
+#print (cursor.description) # prints the result set's schema
+#results = cursor.fetchall()
+#print (results)
+from impala.util import as_pandas
+df = as_pandas(cursor)
+df.head(3)
+```
 
 ## SuperSet的配置
 
@@ -159,6 +173,41 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ``superset runserver -p 8388``
 
+- 配置用impala连接数据库
+
+访问http://ip:8388 , 修改与原为中文，点“数据源”，“数据库”，“+”：
+
+数据库
+
+``impala_dm_finance``
+
+SQLAlchemy URI
+
+``impala://10.1.126.235:21050/dm_finance``
+
+在 SQL 工具箱中公开，选上
+
+扩展
+
+```
+{
+    "metadata_params": {},
+    "engine_params": {
+      "connect_args": {
+        "host": "cnwulcdhnode01",
+        "auth_mechanism":"GSSAPI",
+         "kerberos_service_name": "impala"
+        }
+},
+    "metadata_cache_timeout": {},
+    "schemas_allowed_for_csv_upload": []
+}
+
+```
+
+点测试连接来测试，成功后保存
+
+
 ## Zeppelin的配置
 
 ``yum list installed | grep java``
@@ -176,3 +225,53 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ``cd zeppelin-0.8.1-bin-all``
 
 ``bin/zeppelin-daemon.sh start``
+
+- 配置Interpreter
+
+访问ip:8080,进入Interpreter界面 ，点击 + 创建一个interpreter：
+
+```
+Interpreter Name: impala
+Interpreter group: jdbc
+```
+
+
+需要把finance-remote.keytab放在/root/
+
+修改配置参数：
+
+```
+default.driver com.cloudera.impala.jdbc41.Driver
+default.url jdbc:impala://10.1.126.235:21050;AuthMech=1;KrbHostFQDN=cnwulcdhnode01;KrbServiceName=impala;
+zeppelin.jdbc.auth.type KERBEROS
+zeppelin.jdbc.keytab.location /root/finance-remote.keytab
+zeppelin.jdbc.principal finance/remote@SGMW.COM
+zeppelin.jdbc.interpolation true
+```
+
+新增配置参数：
+
+```
+zeppelin.jdbc.auth.kerberos.proxy.enable true
+default.proxy.user.property DelegationUID
+```
+
+将JDBC的驱动（ ImpalaJDBC41.jar ）复制到Interpreter的位置：
+
+``/root/zeppelin-0.8.1-bin-all/interpreter/jdbc``
+
+把Hadoop安装源中的依赖文件,复制到Interpreter的位置：
+
+``cp /opt/cloudera/parcels/CDH/lib/hadoop/client/*.jar /root/zeppelin-0.8.1-bin-all/interpreter/jdbc/``
+
+- 重启zeppelin
+
+``bin/zeppelin-daemon.sh stop``
+``bin/zeppelin-daemon.sh start``
+
+- 访问ip:8080,新建一个Notebook，粘贴代码执行：
+
+```
+%impala
+select company_number,sum(price) from dm_finance.dw_col_taxcheck group by company_number 
+```
