@@ -256,7 +256,7 @@ zeppelin.jdbc.auth.kerberos.proxy.enable true
 default.proxy.user.property DelegationUID
 ```
 
-将JDBC的驱动（ ImpalaJDBC41.jar ）复制到Interpreter的位置：
+将JDBC的驱动（ [ImpalaJDBC41.jar](https://github.com/chenxixian/BiToolsSetup/raw/master/ImpalaJDBC41.jar) ）复制到Interpreter的位置：
 
 ``/root/zeppelin-0.8.1-bin-all/interpreter/jdbc``
 
