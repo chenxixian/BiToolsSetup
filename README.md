@@ -353,6 +353,6 @@ kerberos
 finance/remote@SGMW.COM
 
 keytab密钥路径
-finance/remote@SGMW.COM
+/root/finance-remote.keytab 
 
 ````
