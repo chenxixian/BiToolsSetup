@@ -329,3 +329,30 @@ bash /usr/local/FineBI5.1/bin/finebi
 ```
 
 访问：http://ip:37799/webroot/decision/
+
+- 配置KERBEROS impala连接
+
+将JDBC的驱动（ [ImpalaJDBC41.jar](https://github.com/chenxixian/BiToolsSetup/raw/master/ImpalaJDBC41.jar) ）复制到lib的位置：
+
+``/usr/local/FineBI5.1/webapps/webroot/WEB-INF/lib``
+
+需要把finance-remote.keytab放在/root/,执行：
+
+``kinit -kt /root/finance-remote.keytab finance/remote@SGMW.COM``
+
+在FineBi后台页面配置impala连接：
+
+````
+URL
+jdbc:impala://10.1.126.235:21050/dm_finance;AuthMech=1;KrbHostFQDN=cnwulcdhnode01;KrbServiceName=impala;LogLevel=6;LogPath=/root/logs;
+
+认证方式
+kerberos
+
+客户端principal
+finance/remote@SGMW.COM
+
+keytab密钥路径
+finance/remote@SGMW.COM
+
+````
