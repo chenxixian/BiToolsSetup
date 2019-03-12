@@ -316,7 +316,16 @@ echo "tail -f logs/zeppelin-root-localhost.localdomain.log" >> startzeppelin.sh
 
 - 运行FineBi
 
+开一个控制台运行：
+
 ```
 tail -f /usr/local/FineBI5.1/logs/fanruan.log
+```
+
+开另一个控制台运行：
+
+```
 bash /usr/local/FineBI5.1/bin/finebi
 ```
+
+访问：http://ip:37799/webroot/decision/
