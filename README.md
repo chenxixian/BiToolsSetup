@@ -1,6 +1,6 @@
 # 常用BI工具安装配置文档
 
-本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置)、[FineBi](#FineBi的配置) 在CENTOS 7的安装配置
+本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置)、[FineBi](#FineBi的配置)、[Tableau Server](#Tableau_Server的配置) 在CENTOS 7的安装配置
 
 ## OS环境配置
 
@@ -356,3 +356,146 @@ keytab密钥路径
 /root/finance-remote.keytab 
 
 ````
+
+# Tableau_Server的配置
+
+- 系统需求
+
+官方建议 
+CPU 不低于 8 核 
+内存最少 8G （低于 8G 无法安装） 
+硬盘空间建议不低于 50G 
+
+- 建立应用管理员用户
+
+必须用非 root 用户安装
+
+建立新用户 tabadmin 并分配给用户组 tsmadmin
+
+```
+useradd tabadmin
+passwd tabadmin
+groupadd tsmadmin
+
+usermod -G tsmadmin -a tabadmin
+```
+
+给与 tabadmin 账户 sudo 权限
+
+``nano /etc/sudoers``
+
+添加以下内容
+
+``tabadmin ALL=(ALL) ALL``
+
+切换到 tabadmin 账户
+
+``su tabadmin``
+
+- 下载安装包并安装
+```
+sudo wget https://www.tableau.com/downloads/server/rpm
+sudo yum install tableau-server-2019-1-1.x86_64.rpm
+cd /opt/tableau/tableau_server/packages/scripts.20191.19.0215.0259/
+sudo ./initialize-tsm --accepteula
+```
+安装完成后切换成 root 账户，或其他带 sudo 权限的账户
+
+用 tsm 命令登陆
+
+``tsm login -u tabadmin``
+
+激活 Key(如果有Key)
+
+``tsm licenses activate -k``
+
+或者申请试用 Trail
+
+``tsm licenses activate -t``
+
+- 注册
+
+创建注册配置文件
+
+````
+tsm register --template > /root/registration_file.json
+
+nano /root/registration_file.json
+
+{
+"zip" : "03079",
+"country" : "USA",
+"city" : "Salem",
+"last_name" : "Smith",
+"industry" : "Software",
+"eula" : "yes",
+"title" : "Software Applications Engineer",
+"phone" : "5556875309",
+"company" : "Example",
+"state" : "NH",
+"department" : "Engineering",
+"first_name" : "Jason",
+"email" : "jsmith@example.com"
+}
+````
+
+注册文件传递给 TSM 以注册
+
+``tsm register --file /root/registration_file.json``
+
+身份验证（这次用本地身份验证）
+
+```
+nano /root/local_auth_file.json
+
+{
+"configEntities":{
+"identityStore": {
+"_type": "identityStoreType",
+"type": "local"
+}
+}
+}
+```
+
+传递配置文件
+
+``tsm settings import -f /root/local_auth_file.json``
+
+应用更改
+
+``tsm pending-changes apply``
+
+- 初始化 Tableau Server 。
+
+若要初始化并启动 Tableau Server ，请使用 –start-server 选项：
+
+``tsm initialize --start-server --request-timeout 1800``
+
+这样将能在初始化后保持服务器运行，从而节省时间。
+
+如果您打算在初始化后重新配置 Tableau Server ，请关闭 –start-server 选项：
+
+``tsm initialize --request-timeout 1800``
+这将在初始化后停止服务器。
+
+启动 Tableau Server 。如果在初始化过程中未使用 –start-server 选项并且已完成配置 Tableau Server ，请使用此命令启动服务器：
+
+``tsm start --request-timeout 900``
+
+启动服务器后还需要添加管理员账户
+
+``tabcmd initialuser --server 'localhost:80' --username 'admin' --password 'Sgmw5050'``
+
+然后就可以 http://127.0.0.1 登陆服务器了
+
+- 查看日志
+
+``tail -f /root/.tableau/tsm/tsm.log``
+
+``cat /root/.tableau/tsm/tsm.log | grep ERROR``
+
+参考 
+https://onlinehelp.tableau.com/current/guides/everybody-install-linux/zh-cn/everybody_admin_install_linux.htm
+
+https://onlinehelp.tableau.com/current/server-linux/zh-cn/config_linux_apply_start.htm
