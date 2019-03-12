@@ -496,6 +496,7 @@ nano /root/local_auth_file.json
 ``cat /root/.tableau/tsm/tsm.log | grep ERROR``
 
 参考 
+
 https://onlinehelp.tableau.com/current/guides/everybody-install-linux/zh-cn/everybody_admin_install_linux.htm
 
 https://onlinehelp.tableau.com/current/server-linux/zh-cn/config_linux_apply_start.htm
