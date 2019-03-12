@@ -1,6 +1,6 @@
 # 开源BI工具安装配置文档
 
-本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置) 在CENTOS 7的安装配置
+本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置)、[FineBi](#FineBi的配置) 在CENTOS 7的安装配置
 
 ## OS环境配置
 
@@ -301,3 +301,22 @@ echo "bin/zeppelin-daemon.sh start" >> startzeppelin.sh
 echo "tail -f logs/zeppelin-root-localhost.localdomain.log" >> startzeppelin.sh
 ```
 运行启动脚本： ./startzeppelin.sh
+
+## FineBi的配置
+
+- 下载FineBi
+
+`` wget http://fine-build.oss-cn-shanghai.aliyuncs.com/finebi/5.1/stable/exe/spider/linux_unix_FineBI5_1-CN.sh``
+
+- 安装FineBi
+
+``bash linux_unix_FineBI5_1-CN.sh``
+
+按实际情况回答
+
+- 运行FineBi
+
+```
+tail -f /usr/local/FineBI5.1/logs/fanruan.log
+bash /usr/local/FineBI5.1/bin/finebi
+```
