@@ -148,6 +148,15 @@ df = as_pandas(cursor)
 df.head(3)
 ```
 
+- 编写一个启动脚本：startjupyterlab.sh
+
+```
+cat ~/.bashrc > startjupyterlab.sh
+echo "conda activate jupyterlab && LANG=zn jupyter lab --port 8888 --no-browser --allow-root --ip=10.3.58.19" >> startjupyterlab.sh
+echo "conda deactivate" >> startjupyterlab.sh
+```
+运行启动脚本： ./startsuperset.sh
+
 ## SuperSet的配置
 
 - 使用 [superset.yaml](https://github.com/chenxixian/BiToolsSetup/raw/master/superset.yaml)建立superset虚拟环境
@@ -207,6 +216,14 @@ SQLAlchemy URI
 
 点测试连接来测试，成功后保存
 
+- 编写一个启动脚本：startsuperset.sh
+
+```
+cat ~/.bashrc > startsuperset.sh
+echo "conda activate superset && superset runserver -p 8388" >> startsuperset.sh
+echo "conda deactivate" >> startsuperset.sh
+```
+运行启动脚本： ./startsuperset.sh
 
 ## Zeppelin的配置
 
@@ -275,3 +292,12 @@ default.proxy.user.property DelegationUID
 %impala
 select company_number,sum(price) from dm_finance.dw_col_taxcheck group by company_number 
 ```
+
+- 编写一个启动脚本：startzeppelin.sh
+
+```
+echo "cd zeppelin-0.8.1-bin-all" > startzeppelin.sh
+echo "bin/zeppelin-daemon.sh start" >> startzeppelin.sh
+echo "tail -f logs/zeppelin-root-localhost.localdomain.log" >> startzeppelin.sh
+```
+运行启动脚本： ./startzeppelin.sh
