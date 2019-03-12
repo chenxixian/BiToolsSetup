@@ -1,4 +1,4 @@
-# 开源BI工具安装配置文档
+# 常用BI工具安装配置文档
 
 本文档包含了[JupyterLab](#JupyterLab配置)、[SuperSet](#JupyterLab配置)、[Zeppelin](#SuperSet的配置)、[FineBi](#FineBi的配置) 在CENTOS 7的安装配置
 
