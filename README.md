@@ -88,7 +88,7 @@ sgmw.com = SGMW.COM
 
 ``source /root/.bashrc``
 
-- 添加conda国内镜像：
+- 添加conda国内镜像(清华镜像站已停止conda国内镜像)：
 
 ``conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/``
 
